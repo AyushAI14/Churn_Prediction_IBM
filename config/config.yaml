@@ -1,0 +1,11 @@
+data_ingestion:
+    raw_data_path: data/raw/IBM_Churn.csv
+    github_data_path: "https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv"
+
+data_preprocessing:
+    processed_data_path: data/processed/IBM_Churn.csv
+    encoder_path: data/processed/IBM_Churn_encoder.pkl
+
+model_training:
+    model_path: models/IBM_Churn.pkl
+    
