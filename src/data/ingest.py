@@ -23,5 +23,6 @@ class DataIngestion:
         df.to_csv(self.raw_data_path, index=False)
         print("Data saved locally")
 
-# trial = DataIngestion()
-# trial.ingest_saved_data_github()
+if __name__=="__main__":
+    trial = DataIngestion()
+    trial.ingest_saved_data_github()

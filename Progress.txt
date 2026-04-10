@@ -1,0 +1,2 @@
+Data Versioning => DVC
+Model Registry  => MLFLOW

@@ -3,8 +3,9 @@ from xgboost import XGBClassifier
 import pandas as pd
 from src.utils.helpers import CreateFile, load_yaml
 import joblib as jb
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import  confusion_matrix
+from sklearn.model_selection import train_test_split
+
 
 
 class ModelTraining:
@@ -12,6 +13,7 @@ class ModelTraining:
         self.config = load_yaml("config/config.yaml")
         self.model_params = load_yaml("config/model_params.yaml")
         self.process_data_path = self.config["data_preprocessing"]["processed_data_path"]
+        self.processed_train_data_path = self.config["data_preprocessing"]["processed_train_data_path"]
         if not os.path.exists(self.process_data_path):
             CreateFile(self.process_data_path)
 
@@ -22,7 +24,7 @@ class ModelTraining:
         y = main_df['Churn']
         print("Data loaded successfully")
         
-        X_train,X_test,Y_train,Y_test=train_test_split(X,y,stratify=y,random_state=42)
+        X_train,X_test,Y_train,Y_test=train_test_split(X,y,stratify=y,random_state=42,test_size=0.001)  #default test size : 0.25
         print("Data split successfully")
         
         xg = XGBClassifier(
@@ -42,6 +44,6 @@ class ModelTraining:
         xg_p = xg.predict(X_test)
         jb.dump(xg, self.config["model_training"]["model_path"])
         print("Model saved successfully")
-
-# trail = ModelTraining()
-# trail.train_model()
+if __name__=="__main__":
+    trail = ModelTraining()
+    trail.train_model()

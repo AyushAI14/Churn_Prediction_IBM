@@ -1,0 +1,67 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python3 src/data/ingest.py
+    deps:
+    - path: src/data/ingest.py
+      hash: md5
+      md5: cd87eb5649362dcf2809fd6f4b5b7d03
+      size: 900
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: fbe8204591fd1ab49e8063c2ec6f0f98.dir
+      size: 971878
+      nfiles: 1
+  data_preprocessing:
+    cmd: python3 src/data/preprocess.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: fbe8204591fd1ab49e8063c2ec6f0f98.dir
+      size: 971878
+      nfiles: 1
+    - path: src/data/preprocess.py
+      hash: md5
+      md5: e0345b010e4a023c603ca761835775c6
+      size: 3224
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: b1918371e1539221d752f0c1be09d9c0.dir
+      size: 1770857
+      nfiles: 4
+  ModelTraining:
+    cmd: python3 src/models/train.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: b1918371e1539221d752f0c1be09d9c0.dir
+      size: 1770857
+      nfiles: 4
+    - path: src/models/train.py
+      hash: md5
+      md5: c1a634c52a1f454d87a332e240bf2ffb
+      size: 2065
+    params:
+      config/model_params.yaml:
+        model.learning_rate: 0.01
+        model.max_depth: 5
+        model.n_estimators: 300
+        model.scale_pos_weight: 2.768
+    outs:
+    - path: models/IBM_Churn.pkl
+      hash: md5
+      md5: d489c28c77fb34b1402502b7b9c908a4
+      size: 790452
+  ModelEvaluation:
+    cmd: python3 src/models/evaluate.py
+    deps:
+    - path: models/IBM_Churn.pkl
+      hash: md5
+      md5: d489c28c77fb34b1402502b7b9c908a4
+      size: 790452
+    - path: src/models/evaluate.py
+      hash: md5
+      md5: 4610401f4e118f4ba46b499327e06dc7
+      size: 1559

@@ -9,8 +9,10 @@ class ModelEvaluation:
     def __init__(self):
         self.config = load_yaml("config/config.yaml")
         self.model_path = self.config["model_training"]["model_path"]
+        self.report_path = self.config["model_evaluation"]["report_path"]
         self.model = jb.load(self.model_path)
         self.process_data_path = self.config["data_preprocessing"]["processed_data_path"]
+        self.processed_test_data_path = self.config["data_preprocessing"]["processed_test_data_path"]
         if not os.path.exists(self.process_data_path):
             CreateFile(self.process_data_path)
     
@@ -21,7 +23,7 @@ class ModelEvaluation:
         y = main_df['Churn']
         print("Data loaded successfully")
         
-        X_train,X_test,Y_train,Y_test=train_test_split(X,y,stratify=y,random_state=42)
+        X_train,X_test,Y_train,Y_test=train_test_split(X,y,stratify=y,random_state=42,test_size=0.1)
         print("Data split successfully")
 
         y_pred = self.model.predict(X_test)
@@ -29,7 +31,9 @@ class ModelEvaluation:
         cr = classification_report(Y_test, y_pred)
         print("Confusion Matrix:\n", cm)
         print("Classification Report:\n", cr)
-        
+        with open(self.report_path,'w') as f:
+            f.write(cr)
 
-# trial = ModelEvaluation()
-# trial.evaluate_model()
+if __name__=="__main__":
+    trial = ModelEvaluation()
+    trial.evaluate_model()

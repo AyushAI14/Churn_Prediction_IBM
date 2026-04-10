@@ -3,6 +3,7 @@ import pandas as pd
 from src.utils.helpers import CreateFile, load_yaml,CommonEdaMetrics
 from sklearn.preprocessing import OneHotEncoder
 import joblib
+from sklearn.model_selection import train_test_split
 
 
 
@@ -11,6 +12,8 @@ class DataProcessing:
         self.config = load_yaml("config/config.yaml")
         self.df = pd.read_csv(self.config['data_ingestion']['raw_data_path'])
         self.process_data_path = self.config["data_preprocessing"]["processed_data_path"]
+        self.processed_train_data_path = self.config["data_preprocessing"]["processed_train_data_path"]
+        self.processed_test_data_path = self.config["data_preprocessing"]["processed_test_data_path"]
         if not os.path.exists(self.process_data_path):
             CreateFile(self.process_data_path)
         
@@ -59,7 +62,22 @@ class DataProcessing:
         main_df.to_csv(self.process_data_path,index=False)
         print("Processed data saved to",self.process_data_path)
         # return CommonEdaMetrics(self.config["data_preprocessing"]["processed_data_path"])
+    def train_test_split(self):
+        main_df = pd.read_csv(self.process_data_path)
+        X = main_df.drop(columns=['customerID','Churn'])
+        y = main_df['Churn']
+        print("Data loaded successfully")
         
-
-# trial = DataProcessing()
-# trial.FeatureEngineering()
+        X_train,X_test,Y_train,Y_test=train_test_split(X,y,stratify=y,random_state=42,test_size = 0.20)  #default test size : 0.25
+        print("Data split successfully")
+        train_df = pd.concat([X_train, Y_train], axis=1)
+        train_df.to_csv(self.processed_train_data_path)
+        print("Traindf is saved")
+        train_df = pd.concat([X_test, Y_test], axis=1)
+        train_df.to_csv(self.processed_test_data_path)
+        print("Traindf is saved")
+        
+if __name__=="__main__":
+    trial = DataProcessing()
+    trial.FeatureEngineering()
+    trial.train_test_split()

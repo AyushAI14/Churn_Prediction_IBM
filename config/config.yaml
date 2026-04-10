@@ -4,8 +4,12 @@ data_ingestion:
 
 data_preprocessing:
     processed_data_path: data/processed/IBM_Churn.csv
+    processed_train_data_path: data/processed/Train_IBM_Churn.csv
+    processed_test_data_path: data/processed/Test_IBM_Churn.csv
     encoder_path: data/processed/IBM_Churn_encoder.pkl
 
 model_training:
     model_path: models/IBM_Churn.pkl
-    
+model_evaluation:
+    report_path: reports/report.txt
+

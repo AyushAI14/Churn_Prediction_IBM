@@ -1,0 +1,35 @@
+stages:
+  data_ingestion:
+      cmd: python3 src/data/ingest.py
+      deps: 
+      - src/data/ingest.py
+      outs: 
+      - data/raw
+    
+  data_preprocessing:
+      cmd: python3 src/data/preprocess.py
+      deps: 
+      - src/data/preprocess.py
+      - data/raw
+      outs:
+      - data/processed
+  
+  ModelTraining:
+      cmd: python3 src/models/train.py
+      deps: 
+      - src/models/train.py
+      - data/processed
+      params:
+        - config/model_params.yaml:
+            - model.n_estimators
+            - model.max_depth
+            - model.learning_rate
+            - model.scale_pos_weight
+      outs:
+      - models/IBM_Churn.pkl
+  
+  ModelEvaluation:
+      cmd: python3 src/models/evaluate.py
+      deps: 
+      - src/models/evaluate.py
+      - models/IBM_Churn.pkl

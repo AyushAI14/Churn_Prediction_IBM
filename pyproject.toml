@@ -5,7 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "fastapi>=0.129.0",
+    "altair==4.2.2",
+    "awscli>=1.44.74",
+    "dvc[s3]>=3.67.1",
+    "dvclive>=3.49.0",
+    "fastapi[standard]>=0.129.0",
     "joblib>=1.5.3",
     "matplotlib>=3.10.8",
     "numpy>=2.4.2",
@@ -13,5 +17,11 @@ dependencies = [
     "pyyaml>=6.0.3",
     "scikit-learn>=1.8.0",
     "seaborn>=0.13.2",
+    "setuptools>=82.0.0",
+    "streamlit>=1.19.0",
+    "uvicorn>=0.41.0",
     "xgboost>=3.2.0",
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
